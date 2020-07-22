@@ -17,10 +17,6 @@ from apex import amp
 #     print('Apex recommended for faster mixed precision training: https://github.com/NVIDIA/apex')
 #     mixed_precision = False  # not installed
 
-wdir = 'weights' + os.sep  # weights dir
-last = wdir + 'last.pt'
-best = wdir + 'best.pt'
-results_file = 'results.txt'
 
 # Hyperparameters
 hyp = {'giou': 3.54,  # giou loss gain
@@ -375,6 +371,11 @@ def train(hyp):
 
 
 if __name__ == '__main__':
+    wdir = 'weights' + os.sep  # weights dir
+    last = wdir + 'last.pt'
+    best = wdir + 'best.pt'
+    results_file = 'results.txt'
+    
     parser = argparse.ArgumentParser()
     parser.add_argument('--epochs', type=int, default=300)  # 500200 batches at bs 16, 117263 COCO images = 273 epochs
     parser.add_argument('--batch-size', type=int, default=16)  # effective bs = batch_size * accumulate = 16 * 4 = 64
@@ -395,6 +396,8 @@ if __name__ == '__main__':
     parser.add_argument('--adam', action='store_true', help='use adam optimizer')
     parser.add_argument('--single-cls', action='store_true', help='train as single-class dataset')
     opt = parser.parse_args()
+    
+    
     opt.weights = last if opt.resume else opt.weights
     check_git_status()
     opt.cfg = check_file(opt.cfg)  # check file
