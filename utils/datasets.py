@@ -263,7 +263,7 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
             path = str(Path(path))  # os-agnostic
             parent = str(Path(path).parent) + os.sep
             if os.path.isfile(path):  # file
-                with open(path, 'r') as f:
+                with open(path, 'r', encoding='utf-8') as f:
                     f = f.read().splitlines()
                     f = [x.replace('./', parent) if x.startswith('./') else x for x in f]  # local to global path
             elif os.path.isdir(path):  # folder
@@ -301,7 +301,7 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
                     s = [x.split() for x in f.read().splitlines()]
                     assert len(s) == n, 'Shapefile out of sync'
             except:
-                s = [exif_size(Image.open(f)) for f in tqdm(self.img_files, desc='Reading image shapes')]
+                s = [exif_size(Image.open(f)) for f in tqdm(self.img_files, desc='Reading image shapes', ncols=120)]
                 np.savetxt(sp, s, fmt='%g')  # overwrites existing (if any)
 
             # Sort by aspect ratio
@@ -340,7 +340,7 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
         else:
             s = path.replace('images', 'labels')
 
-        pbar = tqdm(self.label_files)
+        pbar = tqdm(self.label_files, ncols=120)
         for i, file in enumerate(pbar):
             if labels_loaded:
                 l = self.labels[i]
@@ -409,7 +409,7 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
         # Cache images into memory for faster training (WARNING: large datasets may exceed system RAM)
         if cache_images:  # if training
             gb = 0  # Gigabytes of cached images
-            pbar = tqdm(range(len(self.img_files)), desc='Caching images')
+            pbar = tqdm(range(len(self.img_files)), desc='Caching images', ncols=120)
             self.img_hw0, self.img_hw = [None] * n, [None] * n
             for i in pbar:  # max 10k images
                 self.imgs[i], self.img_hw0[i], self.img_hw[i] = load_image(self, i)  # img, hw_original, hw_resized
@@ -420,7 +420,7 @@ class LoadImagesAndLabels(Dataset):  # for training/testing
         detect_corrupted_images = False
         if detect_corrupted_images:
             from skimage import io  # conda install -c conda-forge scikit-image
-            for file in tqdm(self.img_files, desc='Detecting corrupted images'):
+            for file in tqdm(self.img_files, desc='Detecting corrupted images', ncols=120):
                 try:
                     _ = io.imread(file)
                 except:
@@ -772,7 +772,7 @@ def reduce_img_size(path='../data/sm4/images', img_size=1024):  # from utils.dat
     # creates a new ./images_reduced folder with reduced size images of maximum size img_size
     path_new = path + '_reduced'  # reduced images path
     create_folder(path_new)
-    for f in tqdm(glob.glob('%s/*.*' % path)):
+    for f in tqdm(glob.glob('%s/*.*' % path), ncols=120):
         try:
             img = cv2.imdecode(np.fromfile(f, dtype=np.uint8), cv2.IMREAD_UNCHANGED)
             h, w = img.shape[:2]
@@ -792,7 +792,7 @@ def convert_images2bmp():  # from utils.datasets import *; convert_images2bmp()
     for path in ['../data/sm4/images', '../data/sm4/background']:
         create_folder(path + 'bmp')
         for ext in formats:  # ['.bmp', '.jpg', '.jpeg', '.png', '.tif', '.dng']
-            for f in tqdm(glob.glob('%s/*%s' % (path, ext)), desc='Converting %s' % ext):
+            for f in tqdm(glob.glob('%s/*%s' % (path, ext)), desc='Converting %s' % ext, ncols=120):
                 img = cv2.imdecode(np.fromfile(f, dtype=np.uint8), cv2.IMREAD_UNCHANGED)
                 cv2.imencode('.bmp', img)[1].tofile(f.replace(ext.lower(), '.bmp').replace(path, path + 'bmp'))
 
@@ -814,7 +814,7 @@ def recursive_dataset2bmp(dataset='../data/sm4_bmp'):  # from utils.datasets imp
     # Converts dataset to bmp (for faster training)
     formats = [x.lower() for x in img_formats] + [x.upper() for x in img_formats]
     for a, b, files in os.walk(dataset):
-        for file in tqdm(files, desc=a):
+        for file in tqdm(files, desc=a, ncols=120):
             p = a + '/' + file
             s = Path(file).suffix
             if s == '.txt':  # replace text

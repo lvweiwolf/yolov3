@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Python: 当前文件",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        },
+        {
             "name": "训练",
             "type": "python",
             "request": "launch",
@@ -12,8 +19,11 @@
             "console": "integratedTerminal",
             "justMyCode": false,
             "args": [
-                "--cfg", "./cfg/yolov3-spp-custom.cfg",
-                "--data", "./data/my_data.data"
+                "--batch-size", "6",
+                // "--cache-images",
+                "--cfg", "./jobs/job0/cfg/yolov3-spp-haidong.cfg",
+                "--data", "./jobs/job0/data/haidong.data",
+                "--weights", ""
             ]
         },
         {
@@ -24,8 +34,8 @@
             "console": "integratedTerminal",
             "justMyCode": false,
             "args": [
-                "--cfg=cfg/yolov3-spp-custom.cfg",
-                "--source=C:/Code/训练数据/海东检测/预测数据",
+                "--cfg", "./jobs/job0/cfg/yolov3-spp-haidong.cfg",
+                "--source", "C:/Code/训练数据/海东检测/预测数据",
                 "--output=C:/Code/训练数据/海东检测/预测结果",
                 "--weights=weights_save/best.pt",
                 "--img-size=640",
