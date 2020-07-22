@@ -11,11 +11,11 @@ from utils.datasets import *
 from utils.utils import *
 
 mixed_precision = True
-try:  # Mixed precision training https://github.com/NVIDIA/apex
-    from apex import amp
-except:
-    print('Apex recommended for faster mixed precision training: https://github.com/NVIDIA/apex')
-    mixed_precision = False  # not installed
+# try:  # Mixed precision training https://github.com/NVIDIA/apex
+from apex import amp
+# except:
+#     print('Apex recommended for faster mixed precision training: https://github.com/NVIDIA/apex')
+#     mixed_precision = False  # not installed
 
 wdir = 'weights' + os.sep  # weights dir
 last = wdir + 'last.pt'
@@ -233,7 +233,7 @@ def train(hyp):
 
         mloss = torch.zeros(4).to(device)  # mean losses
         print(('\n' + '%10s' * 8) % ('Epoch', 'gpu_mem', 'GIoU', 'obj', 'cls', 'total', 'targets', 'img_size'))
-        pbar = tqdm(enumerate(dataloader), total=nb)  # progress bar
+        pbar = tqdm(enumerate(dataloader), total=nb, ncols=150)  # progress bar
         for i, (imgs, targets, paths, _) in pbar:  # batch -------------------------------------------------------------
             ni = i + nb * epoch  # number integrated batches (since train start)
             imgs = imgs.to(device).float() / 255.0  # uint8 to float32, 0 - 255 to 0.0 - 1.0
