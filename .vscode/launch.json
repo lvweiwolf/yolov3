@@ -1,0 +1,36 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "训练",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceRoot}/train.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "--cfg=cfg/yolov3-spp-custom.cfg",
+                "--data=data/my_data.data",
+            ]
+        },
+        {
+            "name": "预测",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceRoot}/detect.py",
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "args": [
+                "--cfg=cfg/yolov3-spp-custom.cfg",
+                "--source=C:/Code/训练数据/海东检测/预测数据",
+                "--output=C:/Code/训练数据/海东检测/预测结果",
+                "--weights=weights_save/best.pt",
+                "--img-size=640",
+                "--names=data/my_data.names"
+            ]
+        },
+    ]
+}
