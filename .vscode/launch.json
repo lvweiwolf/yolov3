@@ -23,24 +23,28 @@
                 // "--cache-images",
                 "--cfg", "./jobs/job0/cfg/yolov3-spp-haidong.cfg",
                 "--data", "./jobs/job0/data/haidong.data",
-                "--weights", ""
+                // "--weights", ""
+                "--resume"
             ]
         },
         {
             "name": "预测",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceRoot}/detect.py",
+            "program": "${workspaceRoot}/detect2.py",
             "console": "integratedTerminal",
             "justMyCode": false,
             "args": [
-                "--cfg", "./jobs/job0/cfg/yolov3-spp-haidong.cfg",
-                "--source", "C:/Code/训练数据/海东检测/预测数据",
-                "--output=C:/Code/训练数据/海东检测/预测结果",
-                "--weights=weights_save/best.pt",
-                "--img-size=640",
-                "--names=data/my_data.names"
+                "--cfg", "./cfg/yolov3-spp.cfg",
+                "--source", "C:/Users/lvwei/Desktop/source",
+                "--output", "C:/Users/lvwei/Desktop/out",
+                "--weights", "weights/yolov3-spp.pt",
+                "--img_size", "608",
+                "--names", "data/coco.names"
             ]
         },
     ]
 }
+
+
+// python train.py --batch-size 4 --cfg ./jobs/job0/cfg/yolov3-spp-haidong.cfg --data ./jobs/job0/data/haidong.data --resume
